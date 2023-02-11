@@ -1,0 +1,1 @@
+{"srooms": ["test1"] ,"test1" : {"text": "You wake up, there's nothing around you, choose a path\n\nLEFT: UNKNOWN\nRIGHT: UNKNOWN", "choices": ["LEFT", "RIGHT"], "proutes": {"LEFT": ["test2", "test3"], "RIGHT": ["test2", "test3"]}}, "test2": {"text": "empty\n\nRETURN"}, "test3": {"text": "full\n\nRETURN"}}
