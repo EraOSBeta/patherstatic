@@ -3,22 +3,26 @@ import json
 import random
 
 
-def gen(crooms: dict, roomdata: dict, nroom: str, maxnum: int, pending: list, process: int):
-    num = len(crooms)
-    crooms.setdefault(num, {})
-    crooms[num]['text'] = roomdata[nroom]['text']
-    roomdata[nroom].setdefault('choices', [])
-    for i, choice in enumerate(roomdata[nroom]['choices']):
-        if num < maxnum:
-            crooms[num].setdefault('choices', {})
+def gen(crooms: dict, roomdata: dict, oldpending: list):
+    pending = []
+    for nroom in oldpending:
+        num = len(crooms)
+        roomdata[nroom].setdefault('choices', [])
+        crooms.setdefault(num, {})
+        crooms[num]['text'] = roomdata[nroom]['text']
+        crooms[num].setdefault('choices', {})
+        for i, choice in enumerate(roomdata[nroom]['choices']):
             ranroom = random.choice(roomdata[nroom]['proutes'][choice])
-            crooms[num]['choices'][choice] = len(crooms) + i
-            pending = gen(crooms, roomdata, ranroom, maxnum, pending, process + 1)
-    if process <= 0:
-        for i, v in enumerate(pending):
-            pending.pop(i)
-            gen(crooms, roomdata, v, maxnum, pending, process)
-    return pending
+            crooms[num]['choices'][choice] = choice_counter(crooms) + 1
+            pending.append(ranroom)
+    return [len(crooms), pending]
+
+
+def choice_counter(tocount: dict):
+    counter = 0
+    for r in tocount:
+        counter += len(tocount[r]['choices'])
+    return counter
 
 
 name = input('What\'s gonna be the name of your cartridge? (str) ') or 'invalid name'
@@ -31,9 +35,13 @@ with open(os.path.abspath(os.getcwd()) + '/../../Data/rooms.json') as f:
     data = json.loads(f.read())
 
 print('will generate rooms now...')
-starterroom = random.choice(data['srooms'])
+selectedrooms = [random.choice(data['srooms'])]
 rooms = {}
-gen(rooms, data, starterroom, roomint, [], 0)
+numn = 0
+while numn <= roomint:
+    fback = gen(rooms, data, selectedrooms)
+    numn = fback[0]
+    selectedrooms = fback[1]
 
 with open(os.path.abspath(os.getcwd()) + '/' + name + '.json', 'w') as f:
     f.write(json.dumps(rooms))
