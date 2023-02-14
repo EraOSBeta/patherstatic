@@ -1,56 +1,48 @@
 from __future__ import annotations
 
-import os
-import threading
-import keyboard
 import termios
+import uix
+import logo
 from time import sleep
 
 
 def start_menu():
-    kex('', ['play', 'options', 'exit'], 0, '\033[31m')
+    choice = uix.kex('', ['play', 'options', 'exit'], 0, '\033[31m', 'up', 'down')
+    if choice == 0:
+        play_menu()
+    elif choice == 1:
+        options_menu()
+    elif choice == 2:
+        end()
 
 
-def kex(btext: str | None, options: list, current: int, tcolor: str):
-    reprint(btext, options, current, tcolor)
-    sleep(0.1)
-    nc = [current]
-    wfkey(nc, 'up', 'down', btext, options, tcolor)
+def play_menu():
+    """tba"""
 
 
-def reprint(btext: str | None, options: list, current: int, tcolor: str):
-    os.system('cls' if os.name == 'nt' else 'clear')
-    if btext:
-        print(btext + '\n\n')
-    for option in options:
-        hl = ''
-        if options[current] == option:
-            hl = '\033[47m'
-        print(hl + option + '\033[0m' + tcolor)
+def options_menu():
+    choice = uix.kex('A list of options and settings', ['teststd', 'display logo', 'return'], 0, '\033[31m', 'up',
+                     'down')
+    if choice == 0:
+        print('\033[32m this text should be green\n\n\033[47m\033[30mand this\nshould b\ne a squa\nre      \033[0m')
+        sleep(0.1)
+        uix.wfkey()
+        options_menu()
+    elif choice == 1:
+        logo.dis()
+        options_menu()
+    elif choice == 2:
+        start_menu()
 
 
-def wfkey(val: list | None = None, keyup: str | None = None, keydown: str | None = None, btext: str | None = None,
-          options: list | None = None, tcolor: str | None = None):
-    while True:
-        if keyup and keyboard.is_pressed(keyup):
-            val[0] -= 1
-            if val[0] < 0:
-                val[0] = len(options) - 1
-            reprint(btext, options, val[0], tcolor)
-            sleep(0.1)
-        elif keydown and keyboard.is_pressed(keydown):
-            val[0] += 1
-            if val[0] >= len(options):
-                val[0] = 0
-            reprint(btext, options, val[0], tcolor)
-            sleep(0.1)
-        elif keyboard.is_pressed('enter'):
-            break
+def end():
+    termios.tcflush(0, termios.TCIFLUSH)
+    quit()
 
 
 print('This project requires your terminal to support a few things and follow a few standards, in order to check if '
       'your terminal has this standards, press "t" while in this menu or go to "options/teststd" in the main menu.\n'
       'I recommend you to NOT resize your window and let the game handle resizing.\n\npress "Enter" to continue')
-wfkey()
+uix.wfkey()
 start_menu()
 termios.tcflush(0, termios.TCIFLUSH)
