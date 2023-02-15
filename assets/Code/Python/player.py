@@ -30,7 +30,7 @@ def play_menu():
     if crt == len(crts) - 1:
         start_menu()
     elif crt == len(crts) - 2:
-        gen_menu()
+        gen_menu(20)
     else:
         with open(os.path.abspath(os.getcwd()) + '/Data/crts/' + crts[crt] + '.json') as f:
             data = json.loads(f.read())
@@ -57,10 +57,18 @@ def end():
     quit()
 
 
-def gen_menu():
-    lc = generator.new(20)
-    load_crt(lc)
-    """tba"""
+def gen_menu(dr):
+    c = uix.kex('gen options: ', ['preferred room count: ${1}', 'GENERATE', 'return'], 0, '\033[31m', 'up', 'down')
+    if c == 0:
+        sleep(0.2)
+        dr = uix.kex('gen options: ', ['preferred room count: ${1}', 'GENERATE', 'return'], 0, '\033[31m', 'left',
+                     'right', 1, 20, 999999)
+        gen_menu(dr)
+    elif c == 1:
+        generator.new(dr)
+        play_menu()
+    else:
+        play_menu()
 
 
 def load_crt(crt: dict):
