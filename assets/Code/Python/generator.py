@@ -1,5 +1,6 @@
 import os
 import json
+import hashlib
 import random
 
 
@@ -25,24 +26,17 @@ def choice_counter(tocount: dict):
     return counter
 
 
-name = input('What\'s gonna be the name of your cartridge? (str) ') or 'invalid name'
-try:
-    roomint = int(input('how many rooms would you like to be in your cartridge? (int) ')) - 1
-except ValueError:
-    roomint = 20
-print('opening rooms.json...')
-with open(os.path.abspath(os.getcwd()) + '/../../Data/rooms.json') as f:
-    data = json.loads(f.read())
-
-print('will generate rooms now...')
-selectedrooms = [random.choice(data['srooms'])]
-rooms = {}
-numn = 0
-while numn <= roomint:
-    fback = gen(rooms, data, selectedrooms)
-    numn = fback[0]
-    selectedrooms = fback[1]
-
-with open(os.path.abspath(os.getcwd()) + '/' + name + '.json', 'w') as f:
-    f.write(json.dumps(rooms))
-print('Done!')
+def new(roomint: int):
+    with open(os.path.abspath(os.getcwd()) + '/../../Data/rooms.json') as f:
+        data = json.loads(f.read())
+    selectedrooms = [random.choice(data['srooms'])]
+    rooms = {}
+    numn = 0
+    while numn <= roomint:
+        fback = gen(rooms, data, selectedrooms)
+        numn = fback[0]
+        selectedrooms = fback[1]
+    with open(os.path.abspath(os.getcwd()) + '/Data/crts/' + hashlib.sha256(str(rooms).encode()).hexdigest()[:10] + '.json',
+              'w') as f:
+        f.write(json.dumps(rooms))
+    return rooms

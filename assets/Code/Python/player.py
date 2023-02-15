@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import os
 import termios
+import json
 import uix
+import generator
 import logo
 from time import sleep
 
@@ -17,7 +20,21 @@ def start_menu():
 
 
 def play_menu():
-    """tba"""
+    pcrts = os.scandir(os.path.abspath(os.getcwd()) + '/Data/crts')
+    crts = []
+    for crt in pcrts:
+        if crt.is_file() and crt.name.endswith('.json'):
+            crts.append(crt.name.removesuffix('.json'))
+    crts.extend(['GENERATE A NEW CARTRIDGE', 'return'])
+    crt = uix.kex('Choose a cartridge', crts, 0, '\033[31m', 'up', 'down')
+    if crt == len(crts) - 1:
+        start_menu()
+    elif crt == len(crts) - 2:
+        gen_menu()
+    else:
+        with open(os.path.abspath(os.getcwd()) + '/Data/crts/' + crts[crt] + '.json') as f:
+            data = json.loads(f.read())
+        load_crt(data)
 
 
 def options_menu():
@@ -40,9 +57,19 @@ def end():
     quit()
 
 
+def gen_menu():
+    lc = generator.new(20)
+    load_crt(lc)
+    """tba"""
+
+
+def load_crt(crt: dict):
+    """tba"""
+
+
 print('This project requires your terminal to support a few things and follow a few standards, in order to check if '
-      'your terminal has this standards, press "t" while in this menu or go to "options/teststd" in the main menu.\n'
-      'I recommend you to NOT resize your window and let the game handle resizing.\n\npress "Enter" to continue')
+      'your terminal has this standards, go to "options/teststd" in the main menu.\nI recommend you to NOT resize '
+      'your window and let the game handle resizing.\n\npress "Enter" to continue')
 uix.wfkey()
 start_menu()
 termios.tcflush(0, termios.TCIFLUSH)
