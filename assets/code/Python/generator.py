@@ -12,6 +12,7 @@ def gen(crooms: dict, roomdata: dict, oldpending: list):
         crooms.setdefault(num, {})
         crooms[num]['text'] = roomdata[nroom]['text']
         crooms[num].setdefault('choices', {})
+        print('made ' + nroom + '(' + str(num) + ')')
         for i, choice in enumerate(roomdata[nroom]['choices']):
             ranroom = random.choice(roomdata[nroom]['proutes'][choice])
             crooms[num]['choices'][choice] = choice_counter(crooms) + 1
@@ -27,7 +28,7 @@ def choice_counter(tocount: dict):
 
 
 def new(roomint: int):
-    with open(os.path.abspath(os.getcwd()) + '/../../Data/rooms.json') as f:
+    with open(os.path.abspath(os.getcwd()) + '/Data/generic/rooms.json') as f:
         data = json.loads(f.read())
     selectedrooms = [random.choice(data['srooms'])]
     rooms = {}

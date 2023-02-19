@@ -58,11 +58,12 @@ def end():
 
 
 def gen_menu(dr):
-    c = uix.kex('gen options: ', ['preferred room count: ${1}', 'GENERATE', 'return'], 0, '\033[31m', 'up', 'down')
+    c = uix.kex(btext='gen options: ', options=['preferred room count: ${1}', 'GENERATE', 'return'], current=0,
+                tcolor='\033[31m', up='up', down='down', nc=[0, dr])
     if c == 0:
         sleep(0.2)
         dr = uix.kex('gen options: ', ['preferred room count: ${1}', 'GENERATE', 'return'], 0, '\033[31m', 'left',
-                     'right', 1, 20, 999999)
+                     'right', 1, 20, 999999, [0, dr])
         gen_menu(dr)
     elif c == 1:
         generator.new(dr)
