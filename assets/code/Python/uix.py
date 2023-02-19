@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import keyboard
 from time import sleep
+enterval = True
 
 
 def kex(btext: str | None, options: list, current: int, tcolor: str, up: str | None = None, down: str | None = None,
@@ -30,6 +31,7 @@ def reprint(btext: str | None, options: list, current: list, tcolor: str):
 
 def wfkey(val: list | None = None, keyup: str | None = None, keydown: str | None = None, btext: str | None = None,
           options: list | None = None, tcolor: str | None = None, index: int = 0, maxlen: int | None = None):
+    global enterval
     if options:
         maxlen = maxlen or len(options) - 1
     while True:
@@ -45,7 +47,8 @@ def wfkey(val: list | None = None, keyup: str | None = None, keydown: str | None
                 val[index] = 0
             reprint(btext, options, val, tcolor)
             sleep(0.1)
-        elif keyboard.is_pressed('enter'):
+        elif keyboard.is_pressed('enter') and enterval:
+            enterval = False
             break
 
 
@@ -53,3 +56,11 @@ def replace(text: str, values: list):
     if '${1}' in text:
         text = text.replace('${1}', str(values[1]))
     return text
+
+
+def reset_enter(dummy: None = None):
+    global enterval
+    enterval = True
+
+
+keyboard.on_release_key('enter', reset_enter)

@@ -6,7 +6,6 @@ import json
 import uix
 import generator
 import logo
-from time import sleep
 
 
 def start_menu():
@@ -42,7 +41,6 @@ def options_menu():
                      'down')
     if choice == 0:
         print('\033[32m this text should be green\n\n\033[47m\033[30mand this\nshould b\ne a squa\nre      \033[0m')
-        sleep(0.1)
         uix.wfkey()
         options_menu()
     elif choice == 1:
@@ -61,7 +59,6 @@ def gen_menu(dr):
     c = uix.kex(btext='gen options: ', options=['preferred room count: ${1}', 'GENERATE', 'return'], current=0,
                 tcolor='\033[31m', up='up', down='down', nc=[0, dr])
     if c == 0:
-        sleep(0.2)
         dr = uix.kex('gen options: ', ['preferred room count: ${1}', 'GENERATE', 'return'], 0, '\033[31m', 'left',
                      'right', 1, 20, 999999, [0, dr])
         gen_menu(dr)
