@@ -1,7 +1,7 @@
 # PATHERSTATIC
 ***path***: a course of action or way of achieving a specified result.
 
-***-er***: someone or something performing particular action.
+***-er***: someone or something performing a particular action.
 
 ***static***: not moving or changing
 
