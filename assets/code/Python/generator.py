@@ -5,18 +5,25 @@ import random
 
 
 def gen(crooms: dict, roomdata: dict, oldpending: list):
+    rnum = len(crooms)
     pending = []
     for nroom in oldpending:
+        if nroom == 'STAR':
+            nroom = random.choice(roomdata['rrooms'])
         num = len(crooms)
-        roomdata[nroom].setdefault('choices', [])
+        roomdata['rooms'][nroom].setdefault('choices', [])
         crooms.setdefault(num, {})
-        crooms[num]['text'] = roomdata[nroom]['text']
+        crooms[num].setdefault('choices', {})
+        crooms[num]['text'] = roomdata['rooms'][nroom]['text']
         crooms[num].setdefault('choices', {})
         print('made ' + nroom + '(' + str(num) + ')')
-        for i, choice in enumerate(roomdata[nroom]['choices']):
-            ranroom = random.choice(roomdata[nroom]['proutes'][choice])
-            crooms[num]['choices'][choice] = choice_counter(crooms) + 1
-            pending.append(ranroom)
+        for i, choice in enumerate(roomdata['rooms'][nroom]['choices']):
+            if nroom in roomdata['rrooms']:
+                crooms[num]['choices'][choice] = random.randint(1, rnum)
+            else:
+                ranroom = random.choice(roomdata['rooms'][nroom]['proutes'][choice])
+                crooms[num]['choices'][choice] = choice_counter(crooms) + 1
+                pending.append(ranroom)
     return [len(crooms), pending]
 
 
@@ -37,7 +44,10 @@ def new(roomint: int):
         fback = gen(rooms, data, selectedrooms)
         numn = fback[0]
         selectedrooms = fback[1]
-    with open(os.path.abspath(os.getcwd()) + '/Data/crts/' + hashlib.sha256(str(rooms).encode()).hexdigest()[:10] + '.json',
-              'w') as f:
+    for i, room in enumerate(selectedrooms):
+        selectedrooms[i] = 'STAR'
+    gen(rooms, data, selectedrooms)
+    with open(os.path.abspath(os.getcwd()) + '/Data/crts/' + hashlib.sha256(str(rooms).encode()).hexdigest()[:10] +
+              '.json', 'w') as f:
         f.write(json.dumps(rooms))
     return rooms
