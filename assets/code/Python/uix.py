@@ -21,12 +21,12 @@ def kex(btext: str | None, options: list, current: int, tcolor: str, up: str | N
 def reprint(btext: str | None, options: list, current: list, tcolor: str):
     os.system('cls' if os.name == 'nt' else 'clear')
     if btext:
-        print(tcolor + replace(btext, current) + '\n\n')
+        print(tcolor + handle(btext + '\n\n', current, len(options), True))
     for option in options:
         hl = ''
         if options[current[0]] == option:
             hl = '\033[47m'
-        print(hl + replace(option, current) + '\033[0m' + tcolor)
+        print(hl + tcolor + handle('<center>' + option + '<\\center>', current, len(options), False) + '\033[0m')
 
 
 def wfkey(val: list | None = None, keyup: str | None = None, keydown: str | None = None, btext: str | None = None,
@@ -52,9 +52,33 @@ def wfkey(val: list | None = None, keyup: str | None = None, keydown: str | None
             break
 
 
-def replace(text: str, values: list):
-    if '${1}' in text:
-        text = text.replace('${1}', str(values[1]))
+def handle(text: str, values: list, cint: int, ar: bool):
+    tsize = os.get_terminal_size()
+    y = tsize[0]
+    x = tsize[1]
+    if '${INDEX1}' in text:
+        text = text.replace('${INDEX1}', str(values[1]))
+    if '<center>' in text and '<\\center>' in text:
+        oart = ''
+        art = ''
+        for idx in range(text.index('<center>') + 8, text.index('<\\center>')):
+            oart = oart + text[idx]
+        alist = oart.splitlines(False)
+        alsize = 0
+        for line in alist:
+            alsize = len(line) if len(line) > alsize else alsize
+        y = alsize + 2 if y < alsize + 2 else y
+        nspace = int((tsize[0] - alsize) / 2) if y > alsize + 2 else 1
+        for line in alist:
+            line = ' ' * nspace + line
+            line = line + ' ' * (y - len(line))
+            art = art + line + '\n'
+        art = art.removesuffix('\n')
+        text = text.replace('<center>' + oart + '<\\center>', art)
+    x = int(len(text) / y) + cint + 1 + len(text.splitlines()) if x < len(text) / y + cint + 1 + len(text.splitlines())\
+        else x
+    if ar:
+        text = '\033[8;' + str(x) + ';' + str(y) + 't' + text
     return text
 
 

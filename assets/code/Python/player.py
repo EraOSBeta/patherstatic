@@ -70,10 +70,10 @@ def end():
 
 
 def gen_menu(dr: int = 20):
-    c = uix.kex(btext='gen options: ', options=['preferred room count: ${1}', 'GENERATE', 'return'], current=0,
+    c = uix.kex(btext='gen options: ', options=['preferred room count: ${INDEX1}', 'GENERATE', 'return'], current=0,
                 tcolor='\033[31m', up='up', down='down', nc=[0, dr])
     if c == 0:
-        dr = uix.kex('gen options: ', ['preferred room count: ${1}', 'GENERATE', 'return'], 0, '\033[31m', 'left',
+        dr = uix.kex('gen options: ', ['preferred room count: ${INDEX1}', 'GENERATE', 'return'], 0, '\033[31m', 'left',
                      'right', 1, 20, 999999, [0, dr])
         return dr
     elif c == 1:
