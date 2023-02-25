@@ -99,4 +99,4 @@ print('This project requires your terminal to support a few things and follow a 
       'your window and let the game handle resizing.\n\npress "Enter" to continue')
 uix.wfkey()
 main_process()
-termios.tcflush(0, termios.TCIFLUSH)
+end()
