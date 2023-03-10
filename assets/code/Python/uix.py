@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os
-import threading
 import diypy
 import keyboard
 from time import sleep
@@ -34,8 +33,6 @@ def reprint(btext: str | None, options: list, current: list, tcolor: str):
 def wfkey(val: list | None = None, keyup: str | None = None, keydown: str | None = None, btext: str | None = None,
           options: list | None = None, tcolor: str | None = None, index: int = 0, maxlen: int | None = None):
     global enterval
-    mpt = threading.Thread(target=diypy.hidech)
-    mpt.start()
     if options:
         maxlen = maxlen or len(options) - 1
     while True:
@@ -53,7 +50,6 @@ def wfkey(val: list | None = None, keyup: str | None = None, keydown: str | None
             sleep(0.1)
         elif keyboard.is_pressed('enter') and enterval:
             enterval = False
-            mpt.join()
             break
 
 
